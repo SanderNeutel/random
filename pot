@@ -1,0 +1,190 @@
+import socket,asyncore
+import time
+import datetime
+import os
+from subprocess import Popen, PIPE
+import subprocess
+
+def tijd(self):
+        ts = time.time()	
+	st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')	
+        return st
+
+
+
+class forwarder(asyncore.dispatcher):
+    def __init__(self, ip, port, remoteip,remoteport,backlog=5):
+        asyncore.dispatcher.__init__(self)
+        self.remoteip=remoteip
+	self.remoteport=remoteport
+        self.create_socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.set_reuse_addr()
+        self.bind((ip,port))
+        self.listen(backlog)
+
+
+    def tijd(self):
+        ts = time.time()	
+	st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')	
+        return st
+
+# creates a container if the containers does not exist   
+    def create_container(self, con_name):
+	con_dir = '/var/lib/lxc/' + attacker	
+	print con_dir
+	if not os.path.exists(con_dir):
+		cmd='lxc-clone -s -o base -n '+ str(con_name)
+		print cmd
+		Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+
+    def start_container(self, con_name):
+	log_file='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
+	empty_file= ''
+	#f = open(log_file, 'w')
+	#f.writelines(empty_file)
+	
+	cmd1="lxc-info -n " + str(con_name)   
+	cmd4="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
+	p = Popen(cmd1, shell=True, stdout=PIPE) 	
+	output= p.stdout.read()
+	print output
+	cmd='lxc-start -d -n ' + str(con_name)
+	print cmd1        
+	Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+	time.sleep(1)
+	p = Popen(cmd4, shell=True, stdout=PIPE) 	
+	output= p.stdout.read()
+	print output
+	
+    def logging(self, st, addr):
+        f = open('attacker.log', 'a')
+	print >> f, st, 'new connection from', addr
+
+	
+
+    def handle_accept(self):
+        conn, addr = self.accept()
+	print 'connection'       
+	global st
+	global attacker
+	attacker = addr[0]
+	st = self.tijd()
+	self.logging(st,addr[0])
+	self.create_container(addr[0])
+	time.sleep(1)
+	log_path='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
+	if not os.path.exists(log_path):	
+	    os.makedirs('/var/lib/lxc/' + attacker + '/delta0/home/ubuntu')
+	    f = open('/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history', 'a')
+	    print >> f, 'bollox'
+	    f.close
+	self.start_container(addr[0])
+	time.sleep(3)
+        sender(receiver(conn),self.remoteip,self.remoteport)
+
+class receiver(asyncore.dispatcher):
+    def __init__(self,conn):
+        asyncore.dispatcher.__init__(self,conn)
+        self.from_remote_buffer=''
+        self.to_remote_buffer=''
+        self.sender=None
+
+    def handle_connect(self):
+	pass
+
+    def logging(self, st, tty):
+        f = open('attacker.log', 'a')
+	print >> f, st, 'TTY from', attacker, tty
+
+    def bash_history(self):
+	log_path='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
+	if not os.path.exists(log_path):
+	    print 'no log vailable'
+	else:
+	    print log_path
+            with open(log_path) as f:
+	        for line in f:
+	            print st, line
+		    self.logging(st, line)	
+
+    def handle_read(self):
+        read = self.recv(4096)
+   	self.from_remote_buffer += read
+
+    def writable(self):
+        return (len(self.to_remote_buffer) > 0)
+
+    def handle_write(self):
+        sent = self.send(self.to_remote_buffer)
+        #print '%04i <--'%sent
+        self.to_remote_buffer = self.to_remote_buffer[sent:]
+
+    def stop_container(self, con_name):
+	cmd='lxc-stop -n ' + con_name        
+	Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+	print "container gestopt"
+
+			
+    def handle_close(self):
+        self.close()
+        if self.sender:
+            self.sender.close()
+	    print "connection close"
+	    #time.sleep(10)
+	    self.bash_history()
+	    self.stop_container(attacker)
+	    
+    
+class sender(asyncore.dispatcher):
+    def __init__(self, receiver, remoteaddr,remoteport):
+        asyncore.dispatcher.__init__(self)
+        self.receiver=receiver
+        receiver.sender=self
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connect((remoteaddr, remoteport))
+
+    def handle_connect(self):
+        pass
+
+    def handle_read(self):
+        read = self.recv(4096)
+        #print '<-- %04i'%len(read)
+        self.receiver.to_remote_buffer += read
+
+    def writable(self):
+        return (len(self.receiver.from_remote_buffer) > 0)
+
+    def handle_write(self):
+        sent = self.send(self.receiver.from_remote_buffer)
+        # print '--> %04i'%sent
+        self.receiver.from_remote_buffer = self.receiver.from_remote_buffer[sent:]
+
+    def handle_close(self):
+        self.close()
+        self.receiver.close()
+
+
+
+if __name__=='__main__':
+    import optparse
+    parser = optparse.OptionParser()
+
+    parser.add_option(
+        '-l','--local-ip',
+        dest='local_ip',default='127.0.0.1',
+        help='Local IP address to bind to')
+    parser.add_option(
+        '-p','--local-port',
+        type='int',dest='local_port',default=80,
+        help='Local port to bind to')
+    parser.add_option(
+        '-r','--remote-ip',dest='remote_ip',
+        help='Local IP address to bind to')
+    parser.add_option(
+        '-P','--remote-port',
+        type='int',dest='remote_port',default=80,
+        help='Remote port to bind to')
+    options, args = parser.parse_args()
+
+    forwarder('10.1.1.194',23,'10.0.3.125',22)
+    asyncore.loop()
