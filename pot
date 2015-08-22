@@ -1,15 +1,14 @@
 import socket,asyncore
 import time
+import threading
 import datetime
 import os
 from subprocess import Popen, PIPE
 import subprocess
 
-def tijd(self):
-        ts = time.time()	
-	st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')	
-        return st
 
+global container_ip
+container_ip = 'random'
 
 
 class forwarder(asyncore.dispatcher):
@@ -37,24 +36,35 @@ class forwarder(asyncore.dispatcher):
 		print cmd
 		Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
 
+	
+    def get_container_ip(self, con_name):
+    	cmd4="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
+    	p = Popen(cmd4, shell=True, stdout=PIPE) 	
+    	output= p.stdout.read()
+    	container_ip = output.lstrip()
+    	print 'gestript'
+    	print container_ip
+	self.remoteip=container_ip
+
+
     def start_container(self, con_name):
-	log_file='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
+	log_file='/var/lib/lxc/' + attacker + '/delta0/home/root/.bash_history'
 	empty_file= ''
 	#f = open(log_file, 'w')
 	#f.writelines(empty_file)
-	
-	cmd1="lxc-info -n " + str(con_name)   
-	cmd4="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
-	p = Popen(cmd1, shell=True, stdout=PIPE) 	
-	output= p.stdout.read()
-	print output
-	cmd='lxc-start -d -n ' + str(con_name)
-	print cmd1        
-	Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-	time.sleep(1)
+	cmd4="lxc-info -n " + str(con_name) + " | grep State | cut -d\' \' -f2-"
 	p = Popen(cmd4, shell=True, stdout=PIPE) 	
 	output= p.stdout.read()
+	output = output.lstrip()
+	print 'gestript'
 	print output
+	if 'RUNNING' in output:
+	    print "niks te doen"
+	else:	
+	    cmd5='lxc-start -d -n ' + str(con_name)
+    	    Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
+            time.sleep(3)
+	self.get_container_ip(attacker)
 	
     def logging(self, st, addr):
         f = open('attacker.log', 'a')
@@ -71,15 +81,8 @@ class forwarder(asyncore.dispatcher):
 	st = self.tijd()
 	self.logging(st,addr[0])
 	self.create_container(addr[0])
-	time.sleep(1)
-	log_path='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
-	if not os.path.exists(log_path):	
-	    os.makedirs('/var/lib/lxc/' + attacker + '/delta0/home/ubuntu')
-	    f = open('/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history', 'a')
-	    print >> f, 'bollox'
-	    f.close
-	self.start_container(addr[0])
 	time.sleep(3)
+	self.start_container(addr[0])
         sender(receiver(conn),self.remoteip,self.remoteport)
 
 class receiver(asyncore.dispatcher):
@@ -97,7 +100,7 @@ class receiver(asyncore.dispatcher):
 	print >> f, st, 'TTY from', attacker, tty
 
     def bash_history(self):
-	log_path='/var/lib/lxc/' + attacker + '/delta0/home/ubuntu/.bash_history'
+	log_path='/var/lib/lxc/' + attacker + '/delta0/root/.bash_history'
 	if not os.path.exists(log_path):
 	    print 'no log vailable'
 	else:
@@ -108,7 +111,7 @@ class receiver(asyncore.dispatcher):
 		    self.logging(st, line)	
 
     def handle_read(self):
-        read = self.recv(4096)
+        read = self.recv(8096)
    	self.from_remote_buffer += read
 
     def writable(self):
@@ -120,19 +123,30 @@ class receiver(asyncore.dispatcher):
         self.to_remote_buffer = self.to_remote_buffer[sent:]
 
     def stop_container(self, con_name):
+	#time.sleep(30)
 	cmd='lxc-stop -n ' + con_name        
 	Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
 	print "container gestopt"
 
-			
+    def blocker(self):
+        time.sleep(300)
+	self.stop_container(attacker)
+
+
     def handle_close(self):
         self.close()
         if self.sender:
             self.sender.close()
 	    print "connection close"
-	    #time.sleep(10)
 	    self.bash_history()
-	    self.stop_container(attacker)
+	    t = threading.Thread(name='child procs', target=self.blocker)
+     	    t.start()
+
+
+
+
+
+    
 	    
     
 class sender(asyncore.dispatcher):
@@ -147,7 +161,7 @@ class sender(asyncore.dispatcher):
         pass
 
     def handle_read(self):
-        read = self.recv(4096)
+        read = self.recv(8096)
         #print '<-- %04i'%len(read)
         self.receiver.to_remote_buffer += read
 
@@ -186,5 +200,6 @@ if __name__=='__main__':
         help='Remote port to bind to')
     options, args = parser.parse_args()
 
-    forwarder('10.1.1.194',23,'10.0.3.125',22)
+    print container_ip	
+    forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()
