@@ -59,7 +59,6 @@ class forwarder(asyncore.dispatcher):
 	print output
 	if 'RUNNING' in output:
 	    print "niks te doen"
-            self.get_container_ip(attacker)
 	else:	
 	    cmd5='lxc-start -d -n ' + str(con_name)
     	    Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
@@ -174,5 +173,5 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    forwarder('172.31.22.3',22, container_ip ,22)
+    forwarder('10.1.1.194',22, container_ip ,22)
     asyncore.loop()
