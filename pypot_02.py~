@@ -63,8 +63,9 @@ class forwarder(asyncore.dispatcher):
         else:	
             cmd5='lxc-start -d -n ' + str(con_name)
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
-            time.sleep(3)
+            time.sleep(1)
         self.get_container_ip(attacker)
+        time.sleep(1)
 
     def logging(self, st, addr):
         f = open('attacker.log', 'a')

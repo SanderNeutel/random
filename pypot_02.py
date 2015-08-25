@@ -175,5 +175,5 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    forwarder('192.168.178.37',22, container_ip ,22)
+    forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()
