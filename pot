@@ -123,9 +123,13 @@ class receiver(asyncore.dispatcher):
 
     def stop_container(self, con_name):
 	time.sleep(30)
-	cmd='lxc-stop -n ' + con_name        
+	cmd='lxc-stop -n ' + con_name
+	print cmd        
 	Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
 	print "container gestopt"
+
+    def no_block(self):
+	self.stop_container(self.addr[0])
 
     def handle_close(self):
         self.close()
@@ -133,15 +137,10 @@ class receiver(asyncore.dispatcher):
             self.sender.close()
 	    print "connection close"
 	    self.bash_history()
-	    t = threading.Thread(name='child procs', target=self.stop_container(self.addr[0]))
+	    t = threading.Thread(name='child procs', target=self.no_block)
      	    t.start()
-
-
-
-
-
-    
-	    
+	    print "wordt uitgevoerd"	
+ 
     
 class sender(asyncore.dispatcher):
     def __init__(self, receiver, remoteaddr,remoteport):
@@ -174,5 +173,5 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    forwarder('172.31.22.3',22, container_ip ,22)
+    forwarder('10.1.1.194',22, container_ip ,22)
     asyncore.loop()
