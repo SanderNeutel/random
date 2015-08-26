@@ -79,7 +79,7 @@ class forwarder(asyncore.dispatcher):
         global st
         global attacker
         attacker = addr[0]
-        print attacker
+        print st, attacker
         st = self.tijd()
         self.logging(st,addr[0]) # write to attacker.log
         self.create_container(addr[0]) # if conatiner does not exist create one
@@ -138,7 +138,7 @@ class receiver(asyncore.dispatcher):
         self.close()
         if self.sender:
             self.sender.close()
-	    print "connection close"
+	    print st + "connection close"
 	    self.bash_history()
 	    t = threading.Thread(name='child procs', target=self.no_block)
      	    t.start()
