@@ -88,7 +88,7 @@ class forwarder(asyncore.dispatcher):
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
         self.create_container(addr[0]) # if conatiner does not exist create one
-        time.sleep(1)
+        time.sleep(4)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
         sender(receiver(conn),self.remoteip,self.remoteport)
 

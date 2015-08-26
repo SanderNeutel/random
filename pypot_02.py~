@@ -45,9 +45,9 @@ class forwarder(asyncore.dispatcher):
     	print 'gestript'
     	print container_ip
         self.remoteip=container_ip
-        with open(log_path) as f:
-	        for line in f:
-	            print line        
+        #with open(log_path) as f:
+	     #   for line in f:
+	      #      print line        
 
     def clean_log(self):
         log_file='/var/lib/lxc/' + attacker + '/delta0/home/root/.bash_history'
