@@ -37,13 +37,16 @@ class forwarder(asyncore.dispatcher):
 	
     def get_container_ip(self, con_name):
     	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
-    	p = Popen(get_con, shell=True, stdout=PIPE) 	
+        con_dir = '/var/lib/lxc/' + attacker
+        p = Popen(get_con, shell=True, stdout=PIPE) 	
     	output= p.stdout.read()
         print output
     	container_ip = output.lstrip()
     	print 'gestript'
     	print container_ip
         self.remoteip=container_ip
+        f = open(condir + '/delta0/etc/ip, 'a')
+        print f
 
     def clean_log(self):
         log_file='/var/lib/lxc/' + attacker + '/delta0/home/root/.bash_history'
