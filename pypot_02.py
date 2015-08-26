@@ -79,8 +79,8 @@ class forwarder(asyncore.dispatcher):
         global st
         global attacker
         attacker = addr[0]
-        print st , attacker
         st = self.tijd()
+        print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
         self.create_container(addr[0]) # if conatiner does not exist create one
         time.sleep(1)
