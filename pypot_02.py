@@ -39,6 +39,7 @@ class forwarder(asyncore.dispatcher):
     	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
     	p = Popen(get_con, shell=True, stdout=PIPE) 	
     	output= p.stdout.read()
+        print output
     	container_ip = output.lstrip()
     	print 'gestript'
     	print container_ip
@@ -63,7 +64,7 @@ class forwarder(asyncore.dispatcher):
         else:	
             cmd5='lxc-start -d -n ' + str(con_name)
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
-            time.sleep(2)
+            time.sleep(4)
         self.get_container_ip(attacker)
         time.sleep(1)
 
