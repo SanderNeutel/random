@@ -89,6 +89,15 @@ class forwarder(asyncore.dispatcher):
         print >> f, st, 'new connection from', addr
 
 	
+    def stop_container(self, con_name):
+        time.sleep(30)
+        cmd='lxc-stop -n ' + con_name
+        print cmd        
+        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        print "container gestopt"
+
+    def no_block(self):
+        self.stop_container(self.addr[0])
 
     def handle_accept(self):
         conn, addr = self.accept()
@@ -104,6 +113,8 @@ class forwarder(asyncore.dispatcher):
         ip_count = ip_count + 1
         time.sleep(4)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
+        t = threading.Thread(name='child procs', target=self.no_block)
+        t.start()
         sender(receiver(conn),self.remoteip,self.remoteport)
 
 class receiver(asyncore.dispatcher):
