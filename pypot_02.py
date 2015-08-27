@@ -39,7 +39,7 @@ class forwarder(asyncore.dispatcher):
         ip_count = 21
         c_ip= ipn + str(ip_count)
         print c_ip
-        cor_line = 'lxc.network.ipv4 = ' + c_ip + '24'
+        cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
         print cor_line      
         f = open(log_path,'a+')
         f.write(c_ip)
