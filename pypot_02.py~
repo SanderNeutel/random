@@ -33,18 +33,18 @@ class forwarder(asyncore.dispatcher):
         if not os.path.exists(con_dir):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
-        log_path='/var/lib/lxc/' + attacker + '/config'
-        print log_path
-        ipn = '10.0.3.'
-        ip_count = 21
-        c_ip= ipn + str(ip_count)
-        print c_ip
-        cor_line = 'lxc.network.ipv4 = ' + c_ip + '24'
-        print cor_line      
-        f = open(log_path,'a+')
-        f.write(c_ip)
-        int(ip_count) 
-        ip_count= ip_count + 1
+            log_path='/var/lib/lxc/' + attacker + '/config'
+            print log_path
+            ipn = '10.0.3.'
+            ip_count = 21
+            c_ip= ipn + str(ip_count)
+            print c_ip
+            cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
+            print cor_line      
+            f = open(log_path,'a+')
+            f.write(cor_line)
+            int(ip_count) 
+            ip_count= ip_count + 1
 	             
 	
     def get_container_ip(self, con_name):
