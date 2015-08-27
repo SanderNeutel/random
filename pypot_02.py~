@@ -194,6 +194,7 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    ip_count.x = 21
+    global ip_count
+    ip_count = 21
     forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()

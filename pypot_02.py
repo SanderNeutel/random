@@ -95,6 +95,7 @@ class forwarder(asyncore.dispatcher):
         print 'connection'       
         global st
         global attacker
+        global ip_count
         attacker = addr[0]
         st = self.tijd()
         print st , attacker
