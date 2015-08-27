@@ -5,6 +5,7 @@ import datetime
 import os
 from subprocess import Popen, PIPE
 import subprocess
+import config
 
 
 global container_ip
@@ -193,7 +194,5 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    global ip_count
-    ip_count = 21 
     forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()
