@@ -8,8 +8,6 @@ import subprocess
 
 
 global container_ip
-global ip_count
-ip_count = 21 
 container_ip = 'random'
 
 
@@ -96,8 +94,6 @@ class forwarder(asyncore.dispatcher):
         print 'connection'       
         global st
         global attacker
-        global ip_count
-        ip_count = 21 
         attacker = addr[0]
         st = self.tijd()
         print st , attacker
@@ -197,5 +193,7 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
+    global ip_count
+    ip_count = 21 
     forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()
