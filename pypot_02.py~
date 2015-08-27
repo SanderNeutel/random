@@ -33,7 +33,7 @@ class forwarder(asyncore.dispatcher):
         if not os.path.exists(con_dir):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
-        log_path='/var/lib/lxc/' + attacker + 'config'
+        log_path='/var/lib/lxc/' + attacker + '/config'
         with open(log_path), 'w' as f:
             f.write('Hi there!')
 	             
