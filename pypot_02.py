@@ -162,7 +162,7 @@ class receiver(asyncore.dispatcher):
         print "container gestopt"
 
     def no_block(self):
-        self.stop_container(self.addr[0])
+        self.stop_container(attacker)
 
     def handle_close(self):
         self.close()
@@ -170,8 +170,6 @@ class receiver(asyncore.dispatcher):
             self.sender.close()
 	    print st + "connection close"
 	    self.bash_history()
-	    t = threading.Thread(name='child procs', target=self.no_block)
-     	    t.start()
 	    print "wordt uitgevoerd"	
  
     
