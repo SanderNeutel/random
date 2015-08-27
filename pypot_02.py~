@@ -5,7 +5,7 @@ import datetime
 import os
 from subprocess import Popen, PIPE
 import subprocess
-import config
+
 
 
 global container_ip
@@ -43,8 +43,8 @@ class forwarder(asyncore.dispatcher):
             print cor_line      
             f = open(log_path,'a+')
             f.write(cor_line)
-            int(ip_count) 
-            ip_count= ip_count + 1
+       
+          
 	             
 	
     def get_container_ip(self, con_name):
