@@ -30,7 +30,7 @@ class forwarder(asyncore.dispatcher):
         return st
 
 # creates a container if the containers does not exist   
-    def create_container(self, con_name):
+    def create_container(self, con_name, ip_count):
         con_dir = '/var/lib/lxc/' + attacker	
         if not os.path.exists(con_dir):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
@@ -96,11 +96,14 @@ class forwarder(asyncore.dispatcher):
         print 'connection'       
         global st
         global attacker
+        global ip_count
+        ip_count = 21 
         attacker = addr[0]
         st = self.tijd()
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
-        self.create_container(addr[0]) # if conatiner does not exist create one
+        self.create_container(addr[0], ip_count) # if conatiner does not exist create one
+        ip_count = ip_count + 1
         time.sleep(4)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
         sender(receiver(conn),self.remoteip,self.remoteport)
