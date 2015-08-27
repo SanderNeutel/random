@@ -35,7 +35,7 @@ class forwarder(asyncore.dispatcher):
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
         log_path='/var/lib/lxc/' + attacker + 'config'
         with open(log_path), 'w' as f:
-            print >> f, st, 'new connection from',
+            f.write('Hi there!')
 	             
 	
     def get_container_ip(self, con_name):
