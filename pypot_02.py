@@ -8,6 +8,8 @@ import subprocess
 
 
 global container_ip
+global ip_count
+ip_count = 21 
 container_ip = 'random'
 
 
@@ -36,7 +38,6 @@ class forwarder(asyncore.dispatcher):
             log_path='/var/lib/lxc/' + attacker + '/config'
             print log_path
             ipn = '10.0.3.'
-            ip_count = 21
             c_ip= ipn + str(ip_count)
             print c_ip
             cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'

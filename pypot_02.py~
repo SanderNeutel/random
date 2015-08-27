@@ -8,6 +8,8 @@ import subprocess
 
 
 global container_ip
+global ip_count
+ip_count = 21 
 container_ip = 'random'
 
 
