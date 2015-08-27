@@ -37,14 +37,14 @@ class forwarder(asyncore.dispatcher):
             log_path='/var/lib/lxc/' + attacker + '/config'
             print log_path
             ipn = '10.0.3.'
-            c_ip= ipn + str(ip_count)
+            c_ip= ipn + str(ip_count.x)
             print c_ip
             cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
             print cor_line      
             f = open(log_path,'a+')
             f.write(cor_line)
-            int(ip_count) 
-            ip_count= ip_count + 1
+       
+          
 	             
 	
     def get_container_ip(self, con_name):
@@ -100,7 +100,7 @@ class forwarder(asyncore.dispatcher):
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
-        ip_count = ip_count + 1
+        ip_count.x = ip_count.x + 1
         time.sleep(4)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
         sender(receiver(conn),self.remoteip,self.remoteport)
@@ -194,5 +194,6 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
+    ip_count.x = 21
     forwarder('172.31.22.3',22, container_ip ,22)
     asyncore.loop()
