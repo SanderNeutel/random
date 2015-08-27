@@ -40,8 +40,8 @@ class forwarder(asyncore.dispatcher):
         c_ip= ipn + str(ip_count)
         print c_ip          
         f = open(log_path,'a+')
-        f.write(ip_count)
-        ip_count = ip_count + 1
+        f.write(c_ip)
+        int(ip_count) = int(ip_count) + 1
 	             
 	
     def get_container_ip(self, con_name):
