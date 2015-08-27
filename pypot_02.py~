@@ -34,6 +34,7 @@ class forwarder(asyncore.dispatcher):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
         log_path='/var/lib/lxc/' + attacker + '/config'
+        print log_path
         with open(log_path), 'w' as f:
             f.write('Hi there!')
 	             
