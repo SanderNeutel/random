@@ -90,7 +90,7 @@ class forwarder(asyncore.dispatcher):
 
 	
     def stop_container(self, con_name):
-        time.sleep(30)
+        time.sleep(600)
         cmd='lxc-stop -n ' + con_name
         print cmd        
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
@@ -111,6 +111,8 @@ class forwarder(asyncore.dispatcher):
         self.logging(st,addr[0]) # write to attacker.log
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
+        if ip_count == 100:
+            ip_count = 20
         time.sleep(4)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
         t = threading.Thread(name='child procs', target=self.no_block)
