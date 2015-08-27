@@ -34,9 +34,9 @@ class forwarder(asyncore.dispatcher):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
         log_path='/var/lib/lxc/' + attacker + 'config'
-        f = open(log_path, 'a')
+        with open(log_path) as f:
         print >> f, st, 'new connection from',
-        
+	             
 	
     def get_container_ip(self, con_name):
     	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
