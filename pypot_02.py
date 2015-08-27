@@ -97,7 +97,7 @@ class forwarder(asyncore.dispatcher):
         print "container gestopt"
 
     def no_block(self):
-        self.stop_container(self.addr[0])
+        self.stop_container(attacker)
 
     def handle_accept(self):
         conn, addr = self.accept()
