@@ -80,7 +80,7 @@ class forwarder(asyncore.dispatcher):
         else:	
             cmd5='lxc-start -d -n ' + str(con_name)
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
-            time.sleep(4)
+            time.sleep(1)
         self.get_container_ip(attacker)
         time.sleep(1)
 
@@ -113,7 +113,7 @@ class forwarder(asyncore.dispatcher):
         ip_count = ip_count + 1
         if ip_count == 100:
             ip_count = 20
-        time.sleep(4)
+        time.sleep(2)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
         t = threading.Thread(name='child procs', target=self.no_block)
         t.start()
