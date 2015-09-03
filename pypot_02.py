@@ -11,6 +11,15 @@ import subprocess
 global container_ip
 container_ip = 'random'
 
+class for_log(asyncore.dispatcher):
+    def __init__(self,var):
+        self.logging(var)
+        
+    def logging(self,var):
+        print 'wut'
+        print var
+        return     
+
 
 class forwarder(asyncore.dispatcher):
     def __init__(self, ip, port, remoteip,remoteport,backlog=5):
@@ -109,6 +118,8 @@ class forwarder(asyncore.dispatcher):
         st = self.tijd()
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
+        a = for_log('open')
+        a.logging('open2')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
         if ip_count == 100:
