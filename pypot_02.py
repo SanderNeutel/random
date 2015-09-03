@@ -17,7 +17,8 @@ class for_log(asyncore.dispatcher):
         
     def logging(self,var):
         print 'wut'
-        print var        
+        print var
+        return        
     
     
     
