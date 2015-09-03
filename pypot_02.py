@@ -11,19 +11,6 @@ import subprocess
 global container_ip
 container_ip = 'random'
 
-class for_log(asyncore.dispatcher):
-    def __init__(self,var):
-        self.logging(var)
-        
-    def logging(self,var):
-        print 'wut'
-        print var
-        return        
-    
-    
-    
-
-
 
 class forwarder(asyncore.dispatcher):
     def __init__(self, ip, port, remoteip,remoteport,backlog=5):
@@ -57,6 +44,8 @@ class forwarder(asyncore.dispatcher):
             f = open(log_path,'a+')
             f.write(cor_line)
        
+          
+	             
 	
     def get_container_ip(self, con_name):
     	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
@@ -64,8 +53,13 @@ class forwarder(asyncore.dispatcher):
         p = Popen(get_con, shell=True, stdout=PIPE) 	
     	output= p.stdout.read()
         print output
+    	container_ip = output.lstrip()
+    	print 'gestript'
+    	print container_ip
         self.remoteip=container_ip
-  
+        #with open(log_path) as f:
+	     #   for line in f:
+	      #      print line        
 
     def clean_log(self):
         log_file='/var/lib/lxc/' + attacker + '/delta0/home/root/.bash_history'
@@ -93,7 +87,6 @@ class forwarder(asyncore.dispatcher):
     def logging(self, st, addr):
         f = open('attacker.log', 'a')
         print >> f, st, 'new connection from', addr
-        f.close
 
 	
     def stop_container(self, con_name):
@@ -116,8 +109,6 @@ class forwarder(asyncore.dispatcher):
         st = self.tijd()
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
-       # a = for_log('open')
-#        a.logging('open')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
         if ip_count == 100:
