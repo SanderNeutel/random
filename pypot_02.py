@@ -15,7 +15,7 @@ class for_log(asyncore.dispatcher):
     def __init__(self,var):
         self.logging(var)
         
-    def logging(var):
+    def logging(self,var):
         print var        
     
     
