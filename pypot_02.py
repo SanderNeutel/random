@@ -115,7 +115,7 @@ class forwarder(asyncore.dispatcher):
         print st , attacker
        # self.logging(st,addr[0]) # write to attacker.log
         a = for_log()
-        a.logging('open')
+        a.logging(self,'open')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
         if ip_count == 100:
