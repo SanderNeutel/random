@@ -13,7 +13,7 @@ container_ip = 'random'
 
 class for_log(asyncore.dispatcher):
     def __init__(self,var, st, attacker):
-        self.logging(var, attacker)
+        self.logging(var, st, attacker)
         
     def logging(self,var, st, attacker):
         print 'wut'
