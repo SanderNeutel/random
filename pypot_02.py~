@@ -15,10 +15,10 @@ class for_log(asyncore.dispatcher):
     def __init__(self,var, attacker):
         self.logging(var, attacker)
         
-    def logging(self,var, attacker):
+    def logging(self,var, st, attacker):
         print 'wut'
         print var
-        print attacker
+        print st, attacker
         return     
 
 
