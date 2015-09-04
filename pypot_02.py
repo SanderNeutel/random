@@ -19,6 +19,8 @@ class for_log(asyncore.dispatcher):
         print 'wut'
         print var
         print st, attacker
+        f = open('attacker.log', 'a')
+        print >> f, st, '- New connection from:', attacker
         return     
 
 
@@ -120,7 +122,7 @@ class forwarder(asyncore.dispatcher):
         attacker = addr[0]
         st = self.tijd()
         print st , attacker
-        self.logging(st,addr[0]) # write to attacker.log
+        #self.logging(st,addr[0]) # write to attacker.log
         a = for_log('open', st, attacker)
         #a.logging('open2')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
