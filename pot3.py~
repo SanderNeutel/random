@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import socket,asyncore
 import time
 import threading
@@ -7,19 +8,8 @@ from subprocess import Popen, PIPE
 import subprocess
 
 
-
 global container_ip
 container_ip = 'random'
-
-class for_log(asyncore.dispatcher):
-    def __init__(self,var):
-        self.logging(var, attacker)
-        
-    def logging(self,var, attacker):
-        print 'wut'
-        print var
-        print attacker
-        return     
 
 
 class forwarder(asyncore.dispatcher):
@@ -34,42 +24,25 @@ class forwarder(asyncore.dispatcher):
 
 
     def tijd(self):
-        ts = time.time()	
-        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')	
+        ts = time.time()  
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')  
         return st
 
 # creates a container if the containers does not exist   
-    def create_container(self, con_name, ip_count):
-        con_dir = '/var/lib/lxc/' + attacker	
+    def create_container(self, con_name):
+        con_dir = '/var/lib/lxc/' + attacker  
         if not os.path.exists(con_dir):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
-            log_path='/var/lib/lxc/' + attacker + '/config'
-            print log_path
-            ipn = '10.0.3.'
-            c_ip= ipn + str(ip_count)
-            print c_ip
-            cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
-            print cor_line      
-            f = open(log_path,'a+')
-            f.write(cor_line)
-       
-          
-	             
-	
+
+  
     def get_container_ip(self, con_name):
-    	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
-        log_path='/var/lib/lxc/' + attacker + '/delta0/root/ip'
-        p = Popen(get_con, shell=True, stdout=PIPE)
-    	output= p.stdout.read()
-        print output
-    	container_ip = output.lstrip()
-    	print 'gestript'
-    	print container_ip
+        get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
+        p = Popen(get_con, shell=True, stdout=PIPE)   
+        output= p.stdout.read()
+        container_ip = output.lstrip()
+        print(container_ip)
         self.remoteip=container_ip
-        #with open(log_path) as f:
-	     #   for line in f:
-	      #      print line        
 
     def clean_log(self):
         log_file='/var/lib/lxc/' + attacker + '/delta0/home/root/.bash_history'
@@ -79,56 +52,38 @@ class forwarder(asyncore.dispatcher):
 
     def start_container(self, con_name):
         get_con_info="lxc-info -n " + str(con_name) + " | grep State | cut -d\' \' -f2-"
-        p = Popen(get_con_info, shell=True, stdout=PIPE) 	
+        p = Popen(get_con_info, shell=True, stdout=PIPE)   
         output= p.stdout.read()
         output = output.lstrip()
-        print 'gestript'
-        print output
+        print('gestript')
+        print(output)
         if 'RUNNING' in output:
-            print "niks te doen"
-            self.get_container_ip(attacker)
-        else:	
-            cmd5='lxc-start -d -n ' + str(con_name)
-            Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
+            print("niks te doen")
+        else:  
+     # cmd5='lxc-start -d -n ' + str(con_name)
+         #Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
+            container = lxc.Container(con_name)
+            container.start()
             time.sleep(3)
         self.get_container_ip(attacker)
-        time.sleep(1)
-
+  
     def logging(self, st, addr):
         f = open('attacker.log', 'a')
-        print >> f, st, 'new connection from', addr
+      #  print >> f, st, 'new connection from', addr
 
-	
-    def stop_container(self, con_name):
-        time.sleep(600)
-        cmd='lxc-stop -n ' + con_name
-        print cmd        
-        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-        print "container gestopt"
-
-    def no_block(self):
-        self.stop_container(attacker)
+  
 
     def handle_accept(self):
         conn, addr = self.accept()
-        print 'connection'       
+        print('connection')       
         global st
         global attacker
-        global ip_count
         attacker = addr[0]
         st = self.tijd()
-        print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
-        a = for_log('open', attacker)
-        #a.logging('open2')
-        self.create_container(addr[0], ip_count) # if conatiner does not exist create one
-        ip_count = ip_count + 1
-        if ip_count == 100:
-            ip_count = 20
-        time.sleep(2)
+        self.create_container(addr[0]) # if conatiner does not exist create one
+        time.sleep(1)
         self.start_container(addr[0]) #determine conatiner state and start if neccecerly
-        t = threading.Thread(name='child procs', target=self.no_block)
-        t.start()
         sender(receiver(conn),self.remoteip,self.remoteport)
 
 class receiver(asyncore.dispatcher):
@@ -148,13 +103,13 @@ class receiver(asyncore.dispatcher):
     def bash_history(self):
         log_path='/var/lib/lxc/' + attacker + '/delta0/root/.bash_history'
         if not os.path.exists(log_path):
-            print 'no log vailable'
+            print('no log vailable')
         else:
-            print log_path
+            print(log_path)
             with open(log_path) as f:
-	        for line in f:
-	            print st, line
-                self.logging(st, line)	
+                for line in f:
+                    print(st, line)
+                    self.logging(st, line)  
 
     def handle_read(self):
         read = self.recv(8096)
@@ -171,20 +126,22 @@ class receiver(asyncore.dispatcher):
     def stop_container(self, con_name):
         time.sleep(30)
         cmd='lxc-stop -n ' + con_name
-        print cmd        
+        print(cmd)
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-        print "container gestopt"
+        print("container gestopt")
 
     def no_block(self):
-        self.stop_container(attacker)
+        self.stop_container(self.addr[0])
 
     def handle_close(self):
         self.close()
         if self.sender:
             self.sender.close()
-	    print st + "connection close"
-	    self.bash_history()
-	    print "wordt uitgevoerd"	
+            print("connection close")
+        self.bash_history()
+        t = threading.Thread(name='child procs', target=self.no_block)
+        t.start()
+        print("wordt uitgevoerd")
  
     
 class sender(asyncore.dispatcher):
@@ -218,7 +175,5 @@ class sender(asyncore.dispatcher):
 
 
 if __name__=='__main__':
-    global ip_count
-    ip_count = 21
-    forwarder('172.31.22.3',22, container_ip ,22)
+    forwarder('10.1.1.194',22, container_ip ,22)
     asyncore.loop()
