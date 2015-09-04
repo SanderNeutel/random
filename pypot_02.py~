@@ -16,12 +16,16 @@ class for_log(asyncore.dispatcher):
         self.logging(var, st, attacker)
         
     def logging(self,var, st, attacker):
-        print 'wut'
-        print var
-        print st, attacker
-        f = open('attacker.log', 'a')
-        print >> f, st, '- New connection from:', attacker
-        return     
+        if 'open' in var:
+            print 'wut'
+            print var
+            print st, attacker
+            f = open('attacker.log', 'a')
+            print >> f, st, '- New connection from:', attacker
+        else:
+            f = open('attacker.log', 'a')
+            print >> f, st, '- New closed from:', attacker
+            return     
 
 
 class forwarder(asyncore.dispatcher):
@@ -48,7 +52,6 @@ class forwarder(asyncore.dispatcher):
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
             log_path='/var/lib/lxc/' + attacker + '/config'
             print log_path
-            ipn = '10.0.3.'
             c_ip= '10.0.3.' + str(ip_count)
             print c_ip
             cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
@@ -98,11 +101,6 @@ class forwarder(asyncore.dispatcher):
         self.get_container_ip(attacker)
         time.sleep(1)
 
-    def logging(self, st, addr):
-        f = open('attacker.log', 'a')
-        print >> f, st, 'new connection from', addr
-
-	
     def stop_container(self, con_name):
         time.sleep(600)
         cmd='lxc-stop -n ' + con_name
@@ -188,7 +186,8 @@ class receiver(asyncore.dispatcher):
             self.sender.close()
 	    print st + "connection close"
 	    self.bash_history()
-	    print "wordt uitgevoerd"	
+        a = for_log('close', st, attacker)
+            print "wordt uitgevoerd"	
  
     
 class sender(asyncore.dispatcher):
