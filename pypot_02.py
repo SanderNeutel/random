@@ -49,7 +49,7 @@ class forwarder(asyncore.dispatcher):
             log_path='/var/lib/lxc/' + attacker + '/config'
             print log_path
             ipn = '10.0.3.'
-            c_ip= ipn + str(ip_count)
+            c_ip= '10.0.3.' + str(ip_count)
             print c_ip
             cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
             print cor_line      

@@ -20,7 +20,7 @@ class for_log(asyncore.dispatcher):
         print var
         print st, attacker
         f = open('attacker.log', 'a')
-        print >> f, st, 'new connection from', attacker
+        print >> f, st, '- New connection from:', attacker
         return     
 
 
@@ -49,7 +49,7 @@ class forwarder(asyncore.dispatcher):
             log_path='/var/lib/lxc/' + attacker + '/config'
             print log_path
             ipn = '10.0.3.'
-            c_ip= ipn + str(ip_count)
+            c_ip= '10.0.3.' + str(ip_count)
             print c_ip
             cor_line = 'lxc.network.ipv4 = ' + c_ip + '/24'
             print cor_line      
@@ -122,7 +122,7 @@ class forwarder(asyncore.dispatcher):
         attacker = addr[0]
         st = self.tijd()
         print st , attacker
-        self.logging(st,addr[0]) # write to attacker.log
+        #self.logging(st,addr[0]) # write to attacker.log
         a = for_log('open', st, attacker)
         #a.logging('open2')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
