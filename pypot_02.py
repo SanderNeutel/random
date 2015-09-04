@@ -15,10 +15,10 @@ class for_log(asyncore.dispatcher):
     def __init__(self,var, attacker):
         self.logging(var, attacker)
         
-    def logging(self,var, attacker):
+    def logging(self,var, st, attacker):
         print 'wut'
         print var
-        print attacker
+        print st, attacker
         return     
 
 
@@ -121,7 +121,7 @@ class forwarder(asyncore.dispatcher):
         st = self.tijd()
         print st , attacker
         self.logging(st,addr[0]) # write to attacker.log
-        a = for_log('open', attacker)
+        a = for_log('open', st, attacker)
         #a.logging('open2')
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
