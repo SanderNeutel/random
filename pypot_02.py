@@ -167,7 +167,6 @@ class receiver(asyncore.dispatcher):
 
     def handle_write(self):
         sent = self.send(self.to_remote_buffer)
-        #print '%04i <--'%sent
         self.to_remote_buffer = self.to_remote_buffer[sent:]
 
     def stop_container(self, con_name):

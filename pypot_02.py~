@@ -187,7 +187,7 @@ class receiver(asyncore.dispatcher):
 	    print st + "connection close"
 	    self.bash_history()
         a = for_log('close', st, attacker)
-            print "wordt uitgevoerd"	
+	
  
     
 class sender(asyncore.dispatcher):
