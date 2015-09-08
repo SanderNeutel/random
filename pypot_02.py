@@ -23,7 +23,7 @@ class for_log(asyncore.dispatcher):
             print >> f, st, '- New connection from:', attacker
         else:
             f = open('attacker.log', 'a')
-            print >> f, st, '- New closed from:', attacker
+            print >> f, st, '- Connection closed from:', attacker
             return     
 
 

@@ -149,8 +149,8 @@ class receiver(asyncore.dispatcher):
             print log_path
             with open(log_path) as f:
 	        for line in f:
-	            #print st, line
-                self.logging(st, line)	
+	            self.logging(st, line)	
+                #print st, line
 
     def handle_read(self):
         read = self.recv(8096)
