@@ -182,8 +182,8 @@ class receiver(asyncore.dispatcher):
         if self.sender:
             self.sender.close()
 	    print st + "connection close"
-	    self.bash_history()
         a = for_log('close', st, attacker)
+        self.bash_history()
 	
  
     

@@ -97,7 +97,7 @@ class forwarder(asyncore.dispatcher):
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
             time.sleep(3)
         self.get_container_ip(attacker)
-        time.sleep(1)
+        time.sleep(2)
 
     def stop_container(self, con_name):
         time.sleep(600)
