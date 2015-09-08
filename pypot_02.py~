@@ -17,7 +17,6 @@ class for_log(asyncore.dispatcher):
         
     def logging(self,var, st, attacker):
         if 'open' in var:
-            print 'wut'
             print var
             print st, attacker
             f = open('attacker.log', 'a')
@@ -64,12 +63,9 @@ class forwarder(asyncore.dispatcher):
 
     def get_container_ip(self, con_name):
     	get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
-        log_path='/var/lib/lxc/' + attacker + '/delta0/root/ip'
         p = Popen(get_con, shell=True, stdout=PIPE)
         output= p.stdout.read()
-        print output
         container_ip = output.lstrip()
-        print 'gestript'
         print container_ip
         self.remoteip=container_ip
         #with open(log_path) as f:
@@ -182,8 +178,9 @@ class receiver(asyncore.dispatcher):
         if self.sender:
             self.sender.close()
 	    print st + "connection close"
-        a = for_log('close', st, attacker)
         self.bash_history()
+        a = for_log('close', st, attacker)
+        
 	
  
     
