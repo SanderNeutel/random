@@ -58,9 +58,7 @@ class forwarder(asyncore.dispatcher):
             print cor_line      
             f = open(log_path,'a+')
             f.write(cor_line)
-       
-          
-                
+                          
                 
                 
 
@@ -167,7 +165,6 @@ class receiver(asyncore.dispatcher):
 
     def handle_write(self):
         sent = self.send(self.to_remote_buffer)
-        #print '%04i <--'%sent
         self.to_remote_buffer = self.to_remote_buffer[sent:]
 
     def stop_container(self, con_name):
