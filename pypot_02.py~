@@ -125,7 +125,7 @@ class forwarder(asyncore.dispatcher):
             ip_count = 20
         time.sleep(2)
         self.start_container(container_name) #determine conatiner state and start if neccecerly
-        t = threading.Thread(name='child procs', target=self.no_block(container_name)
+        t = threading.Thread(name='child procs', target=self.no_block(container_name))
         t.start()
         sender(receiver(conn),self.remoteip,self.remoteport)
 

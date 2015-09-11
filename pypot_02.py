@@ -96,7 +96,7 @@ class forwarder(asyncore.dispatcher):
         time.sleep(1)
 
     def stop_container(self, con_name):
-        time.sleep(20)
+        time.sleep(60)
         cmd='lxc-stop -n ' + con_name
         print cmd        
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
