@@ -116,7 +116,9 @@ class forwarder(asyncore.dispatcher):
         print st , attacker
         #self.logging(st,addr[0]) # write to attacker.log
         a = for_log('open', st, attacker)
+        print 'time'
         container_name= time.strftime("%Y_%m_%d") + '_' + addr[0]
+        print 'time2'
         print container_name        
         self.create_container(addr[0], ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
