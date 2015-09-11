@@ -167,7 +167,7 @@ class receiver(asyncore.dispatcher):
         self.to_remote_buffer = self.to_remote_buffer[sent:]
 
     def stop_container(self, con_name):
-        time.sleep(30)
+        time.sleep(10)
         cmd='lxc-stop -n ' + con_name
         print cmd        
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
@@ -182,6 +182,7 @@ class receiver(asyncore.dispatcher):
             self.sender.close()
 	    print st + "connection close"
         self.bash_history()
+        self.no_block()
         a = for_log('close', st, attacker)
         
 	
