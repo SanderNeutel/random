@@ -95,15 +95,15 @@ class forwarder(asyncore.dispatcher):
         self.get_container_ip(container_name)
         time.sleep(1)
 
-    def stop_container(self, con_name):
+    def stop_container(self):
         time.sleep(60)
-        cmd='lxc-stop -n ' + con_name
+        cmd='lxc-stop -n ' + container_name
         print cmd        
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
         print "container gestopt"
 
-    def no_block(self,container_name):
-        self.stop_container(container_name)
+    def no_block(self):
+        self.stop_container()
 
     def handle_accept(self):
         conn, addr = self.accept()
