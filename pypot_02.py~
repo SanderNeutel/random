@@ -45,7 +45,7 @@ class forwarder(asyncore.dispatcher):
 
 # creates a container if the containers does not exist   
     def create_container(self, con_name, ip_count):
-        con_dir = '/var/lib/lxc/' + attacker	
+        con_dir = '/var/lib/lxc/' + con_name	
         if not os.path.exists(con_dir):
             create_con='lxc-clone -s -o base -n '+ str(con_name)
             Popen(create_con, shell=True, stdout=PIPE).communicate()[0]
@@ -118,16 +118,15 @@ class forwarder(asyncore.dispatcher):
         a = for_log('open', st, attacker)
         print 'time'
         container_name= time.strftime("%Y_%m_%d") + '_' + addr[0]
-        print 'time2'
         print container_name        
-        self.create_container(addr[0], ip_count) # if conatiner does not exist create one
+        self.create_container(container_name, ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
         if ip_count == 100:
             ip_count = 20
         time.sleep(2)
-        self.start_container(addr[0]) #determine conatiner state and start if neccecerly
+        self.start_container(container_name) #determine conatiner state and start if neccecerly
         t = threading.Thread(name='child procs', target=self.no_block)
-        t.start()
+       # t.start()
         sender(receiver(conn),self.remoteip,self.remoteport)
 
 class receiver(asyncore.dispatcher):
@@ -167,7 +166,7 @@ class receiver(asyncore.dispatcher):
         self.to_remote_buffer = self.to_remote_buffer[sent:]
 
     def stop_container(self, con_name):
-        time.sleep(30)
+        time.sleep(10)
         cmd='lxc-stop -n ' + con_name
         print cmd        
         Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
@@ -182,6 +181,7 @@ class receiver(asyncore.dispatcher):
             self.sender.close()
 	    print st + "connection close"
         self.bash_history()
+        self.no_block()
         a = for_log('close', st, attacker)
         
 	
