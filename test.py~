@@ -1,0 +1,5 @@
+import types
+
+for key, obj in nltk.__dict__.iteritems():
+    if type(obj) is types.ModuleType: 
+        print key
