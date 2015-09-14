@@ -5,6 +5,7 @@ import datetime
 import os
 from subprocess import Popen, PIPE
 import subprocess
+import conatiner_ip
 
 
 
@@ -87,12 +88,19 @@ class forwarder(asyncore.dispatcher):
         print output
         if 'RUNNING' in output:
             print "niks te doen"
-            self.get_container_ip(container_name)
+            ip = container_ip.get_container_ip(container_name)
+            print ip
+            self.remoteip=ip
+           # self.get_container_ip(container_name)
         else:	
             cmd5='lxc-start -d -n ' + str(container_name)
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
-            time.sleep(3)
-        self.get_container_ip(container_name)
+            time.sleep(2)
+        ip = container_ip.get_container_ip(container_name)
+        print "to print or not"
+        print ip
+        self.remoteip=ip
+        #self.get_container_ip(container_name)
         time.sleep(1)
 
     def stop_container(self):
