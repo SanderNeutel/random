@@ -88,8 +88,8 @@ class forwarder(asyncore.dispatcher):
         print output
         if 'RUNNING' in output:
             print "niks te doen"
-            container.getcontainer_ip(container_name)
-            #print ip
+            ip = container.getcontainer_ip(container_name)
+            print ip
             self.remoteip=ip
            # self.get_container_ip(container_name)
         else:	
