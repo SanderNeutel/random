@@ -6,7 +6,7 @@ import os
 from subprocess import Popen, PIPE
 import subprocess    
     
-def container_ip(con_name):
+def getcontainer_ip(con_name):
     get_con="lxc-info -n " + str(con_name) + " | grep IP | cut -d\' \' -f2-"
     p = Popen(get_con, shell=True, stdout=PIPE)
     output= p.stdout.read()
