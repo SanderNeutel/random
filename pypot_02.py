@@ -91,6 +91,7 @@ class forwarder(asyncore.dispatcher):
             ip = container.getcontainer_ip(container_name)
             print ip
             self.remoteip=ip
+            container_ip = ip
            # self.get_container_ip(container_name)
         else:	
             cmd5='lxc-start -d -n ' + str(container_name)
@@ -100,6 +101,7 @@ class forwarder(asyncore.dispatcher):
         print "to print or not"
         #print ip
         self.remoteip=ip
+        container_ip = ip 
         #self.get_container_ip(container_name)
         time.sleep(1)
 
