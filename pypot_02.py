@@ -5,7 +5,7 @@ import datetime
 import os
 from subprocess import Popen, PIPE
 import subprocess
-from container_ip import get_container_ip
+from container_ip import container_ip
 
 
 
