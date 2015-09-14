@@ -11,6 +11,6 @@ def getcontainer_ip(con_name):
     p = Popen(get_con, shell=True, stdout=PIPE)
     output= p.stdout.read()
     container_ip = output.lstrip()
-    print container_ip
+    print "container_ip"
     return container_ip
         
