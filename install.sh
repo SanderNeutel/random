@@ -1,6 +1,10 @@
 #install LXC
 apt-get -y install lxc 
 
+#forwarding tor
+iptables -A PREROUTING -i lxcbr0 -p tcp --syn -j REDIRECT --to-ports 9040
+iptables -A PREROUTING -i lxcbr0 -p udp --dport 53 -j REDIRECT --to-ports 53
+
 #create container
 lxc-create -n allspark -t ubuntu 
 
