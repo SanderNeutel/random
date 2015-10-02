@@ -79,7 +79,7 @@ class forwarder(asyncore.dispatcher):
             cmd5='lxc-start -d -n ' + str(container_name)
             Popen(cmd5, shell=True, stdout=PIPE).communicate()[0]
             time.sleep(2)
-        container.getcontainer_ip(container_name)
+        ip = container.getcontainer_ip(container_name)
         self.remoteip=ip
         #container_ip = ip 
         #self.get_container_ip(container_name)
@@ -109,8 +109,10 @@ class forwarder(asyncore.dispatcher):
         print 'time'
         global container_name    
         container_name= time.strftime("%Y_%m_%d") + '_' + addr[0]
-        print container_name        
-        self.create_container(container_name, ip_count) # if conatiner does not exist create one
+        print container_name
+        global container_array
+        container_array = []        
+        container.create_container(container_name, ip_count    
         ip_count = ip_count + 1
         if ip_count == 100:
             ip_count = 20
