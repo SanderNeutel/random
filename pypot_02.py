@@ -109,11 +109,8 @@ class forwarder(asyncore.dispatcher):
         print 'time'
         global container_name    
         container_name= time.strftime("%Y_%m_%d") + '_' + addr[0]
-        print container_name
-        global container_array
-        container_array = [] 
-        container_array.append(container_name)       
-        container.create_container(container_name, ip_count    
+        print container_name        
+        self.create_container(container_name, ip_count) # if conatiner does not exist create one
         ip_count = ip_count + 1
         if ip_count == 100:
             ip_count = 20
@@ -212,5 +209,5 @@ class sender(asyncore.dispatcher):
 if __name__=='__main__':
     global ip_count
     ip_count = 21
-    forwarder('172.31.22.3',22, container_ip ,22)
+    forwarder('172.31.25.75',22, container_ip ,22)
     asyncore.loop()
